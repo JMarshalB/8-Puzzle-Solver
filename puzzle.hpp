@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <list>
 
 struct Node {
     std::vector<int> data;
@@ -16,36 +17,34 @@ public:
 
 
     //Different Algos
-    void BFS();
+    void BFS(Node* node);
+    //Need DFS
+    //NEED Dijkstra Algo
+
+    //Public Utility
+    void printFunc(Node* node);
 
 protected:
     //move up left right down
-    void move_up(Node* node);
-    void move_down(Node* node);
-    void move_right(Node* node);
-    void move_left(Node* node);
+    void move_up(Node* node, int bSpace);
+    void move_down(Node* node, int bSpace);
+    void move_right(Node* node, int bSpace);
+    void move_left(Node* node, int bSpace);
+    
 
     //Utility Functions
-    void printFunc(Node* node);
     int findBlank(Node* node);
+    void expandNode(Node* node);
 
 
 
 
 private:
-    Node* root = new Node();
-    Node* goal = new Node();
-
-
     std::vector<int>::iterator it;
-    std::vector<int> initialState = {
-        1, 3, 4,
-        8, 0, 2,
-        7, 6, 5
-    };
+
     std::vector<int> goalState = {
-        1, 2, 3,
-        8, 0, 4,
-        7, 6, 5
+    1, 2, 3,
+    8, 0, 4,
+    7, 6, 5
     };
 };

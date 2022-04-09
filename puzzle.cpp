@@ -1,58 +1,77 @@
 #include "puzzle.hpp"
 
 Puzzle::Puzzle() {
-	root->data = initialState;
-	root->parent = nullptr;
-	root->cost = 0;
 
-	goal->data = goalState;
 }
 
 Puzzle::~Puzzle(){
-	delete root;
-	delete goal;
 
 }
 
 //NOT FINISHED YET
-void Puzzle::BFS() {
-	std::cout << "--------------\nInitial Puzzle\n--------------\n";
-	printFunc(root);
-
-	std::cout << "--------------\nGoal Puzzle\n--------------\n";
-	printFunc(goal);
-	
-	int blankSpacePos;
-	std::vector<int> blankSpace;
+void Puzzle::BFS(Node* node) {
+	std::list<Node*> openList;
+	std::list<Node*> closedist;
+	openList.push_back(node);
+		
 	bool goalState = false;
 
-	while (!goalState) {
-		blankSpacePos = findBlank(root);
+	
+}
+
+//Creates all possible children given parent node
+void Puzzle::expandNode(Node* node) {
+	int blankSpacePos;
+	blankSpacePos = findBlank(node);
+
+	move_up(node, blankSpacePos);
+	move_down(node, blankSpacePos);
+	move_left(node, blankSpacePos);
+	move_right(node, blankSpacePos);
+
+}
+
+//Creates child from moving zero up
+void Puzzle::move_up(Node* node, int bSpace) {
+	if (bSpace != 0 && bSpace != 1 && bSpace != 2) {
+		Node* child = node;
+		std::swap(child->data.at(bSpace), node->data.at(bSpace - 3));
+		child->parent = node;
 	}
 
-}
-
-//move up left right down
-void Puzzle::move_up(Node* node) {
-	
 
 
 }
 
-void Puzzle::move_down(Node* node) {
-
+//Creates child from moving zero down
+void Puzzle::move_down(Node* node, int bSpace) {
+	if (bSpace != 6 && bSpace != 7 && bSpace != 8) {
+		Node* child = node;
+		std::swap(child->data.at(bSpace), node->data.at(bSpace + 3));
+		child->parent = node;
+	}
 
 
 }
 
-void Puzzle::move_right(Node* node) {
-
+//Creates child from moving zero right
+void Puzzle::move_right(Node* node, int bSpace) {
+	if (bSpace != 2 && bSpace != 5 && bSpace != 8) {
+		Node* child = node;
+		std::swap(child->data.at(bSpace), node->data.at(bSpace + 1));
+		child->parent = node;
+	}
 
 
 }
 
-void Puzzle::move_left(Node* node) {
-
+//Creates child from moving zero left
+void Puzzle::move_left(Node* node, int bSpace) {
+	if (bSpace != 0 && bSpace != 3 && bSpace != 6) {
+		Node* child = node;
+		std::swap(child->data.at(bSpace), node->data.at(bSpace - 1));
+		child->parent = node;
+	}
 
 
 }
@@ -68,17 +87,15 @@ void Puzzle::printFunc(Node* node) {
 		std::cout << " " << *it << " ";
 		printCount++;
 	}
-	std::cout << "\n";
+	std::cout << "\n\n";
 		
 }
 
 //Finds the "blank" position so it can be swapped
-
 int Puzzle::findBlank(Node* node) {
 	int distance;
 	it = std::find(node->data.begin(), node->data.end(), 0);
 	distance = std::distance(node->data.begin(), it);
-	std::cout << distance;
 	return distance;
 	
 
