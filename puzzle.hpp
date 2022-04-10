@@ -2,11 +2,13 @@
 #include <vector>
 #include <iostream>
 #include <list>
+#include <stack>
 
 struct Node {
     std::vector<int> data;
     Node* parent;
     int cost;
+    std::vector<Node> childern = {};
 };
 
 class Puzzle {
@@ -18,29 +20,33 @@ public:
 
     //Different Algos
     void BFS(Node* node);
-    //Need DFS
+    bool DFS(Node* node);
     //NEED Dijkstra Algo
 
     //Public Utility
-    void printFunc(Node* node);
+    void printState (Node* node);
 
 protected:
     //move up left right down
-    void move_up(Node* node, int bSpace);
-    void move_down(Node* node, int bSpace);
-    void move_right(Node* node, int bSpace);
-    void move_left(Node* node, int bSpace);
+    Node move_up(Node node, int bSpace);
+    Node move_down(Node node, int bSpace);
+    Node move_right(Node node, int bSpace);
+    Node move_left(Node node, int bSpace);
     
 
     //Utility Functions
     int findBlank(Node* node);
-    void expandNode(Node* node);
-
-
+    void expandNode(Node* node, std::vector<Node> *vector);
+    bool stateInList(Node* node, std::vector<Node> list);
+    void path(Node* node);
 
 
 private:
     std::vector<int>::iterator it;
+    std::list<Node> dfsOpenList;
+    std::list<Node> dfsClosedList;
+
+
 
     std::vector<int> goalState = {
     1, 2, 3,
@@ -48,3 +54,10 @@ private:
     7, 6, 5
     };
 };
+
+inline bool operator ==(const std::vector<int> data1, const std::vector<int> data2) {
+    bool equals = true;
+    for (int i = 0; i < 8; i++)
+        if (data1[i] != data2[i]) { equals = false; }
+    return equals;
+}
