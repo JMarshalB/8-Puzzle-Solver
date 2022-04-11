@@ -1,29 +1,31 @@
-#include "8puzzle.h"
-
+#include "puzzle.hpp"
 
 int main() {
-    
+    Puzzle obj;
     std::vector<int> initialState = {
-        1, 3, 4,
-        8, 0, 2,
-        7, 6, 5
+        2, 8, 3,
+        1, 6, 4,
+        7, 0, 5
     };
+
     std::vector<int> goalState = {
         1, 2, 3,
         8, 0, 4,
         7, 6, 5
     };
-
-    Node root = Node{ initialState, nullptr, 0 };
-    Node goal = Node{ goalState, nullptr, 0 };
+    
+    Node* root = new Node{ initialState, nullptr, 0 };
+    Node* goal = new Node{ goalState, nullptr, 0 };
 
     std::cout << "--------------\nInitial Puzzle\n--------------\n";
-    root.printData();
+    obj.printState(root);
 
     std::cout << "--------------\nGoal Puzzle\n--------------\n";
-    goal.printData();
+    obj.printState(goal);
+	
+	obj.DFS(root);
 
     //std::cout << "DONE!" << std::endl;
-    return 0;
 
+	return 0;
 }
