@@ -3,9 +3,9 @@
 int main() {
     Puzzle obj;
     std::vector<int> initialState = {
-        2, 8, 3,
-        1, 6, 4,
-        7, 0, 5
+        1, 2, 3,
+        7, 0, 4,
+        6, 8, 5
     };
 
     std::vector<int> goalState = {
@@ -14,14 +14,14 @@ int main() {
         7, 6, 5
     };
     
-    Node* root = new Node{ initialState, nullptr, 0 };
-    Node* goal = new Node{ goalState, nullptr, 0 };
+    Node *root = new Node{ initialState, nullptr, 0 };
+    Node goal = Node{ goalState, nullptr, 0 };
 
     std::cout << "--------------\nInitial Puzzle\n--------------\n";
     obj.printState(root);
 
     std::cout << "--------------\nGoal Puzzle\n--------------\n";
-    obj.printState(goal);
+    obj.printState(&goal);
 	
 	obj.DFS(root);
 

@@ -3,12 +3,14 @@
 #include <iostream>
 #include <list>
 #include <stack>
+#include <algorithm>
 
 struct Node {
     std::vector<int> data;
     Node* parent;
     int cost;
     std::vector<Node*> childern = {};
+
 };
 
 class Puzzle {
@@ -21,7 +23,7 @@ public:
     //Different Algos
     void BFS(Node* node);
     bool DFS(Node* node);
-    //NEED Dijkstra Algo
+    void Dijkstra(Node* node);
 
     //Public Utility
     void printState (Node* node);
@@ -43,8 +45,7 @@ protected:
 
 private:
     std::vector<int>::iterator it;
-    std::list<Node*> dfsOpenList;
-    std::list<Node*> dfsClosedList;
+    std::list<Node*> visitedDFSList;
 
     std::vector<int> goalState = {
     1, 2, 3,
@@ -59,3 +60,4 @@ inline bool operator ==(const std::vector<int> data1, const std::vector<int> dat
         if (data1[i] != data2[i]) { equals = false; }
     return equals;
 }
+

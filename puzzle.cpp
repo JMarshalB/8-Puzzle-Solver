@@ -12,16 +12,18 @@ void Puzzle::BFS(Node* node) {
 	std::list<Node*> openList;
 	std::list<Node*> closedList;
 	openList.push_back(node);
+	Node* currentNode;
 		
 	bool goal = false;
 
 	while (!openList.empty() && !goal) {
 		//Get current node in queue
-		Node* currentNode = openList.front();
+		currentNode = openList.front();
 		openList.pop_front(); //Then pop it
 		closedList.push_back(currentNode); //Finally add to closed list
 
 		//Create all moves possible with that node
+		//printState(node);
 		expandNode(currentNode);
 
 		//Iterate through childern to check if it equals the goal state
@@ -55,25 +57,72 @@ bool Puzzle::DFS(Node* node) {
 		return true;
 	}
 
-	//If node is not in list
-	if (stateInList(node, dfsOpenList) || stateInList(node, dfsClosedList)) {
-		return false;
-	}
+	//If node is already in list
+	if (stateInList(node, visitedDFSList)) { return false; }
 
-	dfsOpenList.push_front(node);
+	visitedDFSList.push_front(node);
 	expandNode(node);
 
 	for (auto child : node->childern) {
-		child->cost = child->parent->cost + 1;
-		if (DFS(child))
-			return true;
-	}
+		if (node->parent != nullptr)
+			if (child->data == node->parent->data) { continue; }
 
-	dfsClosedList.push_front(node);
-	dfsOpenList.pop_front();
+		child->cost = child->parent->cost + 1;
+
+		if (DFS(child)) { visitedDFSList.clear(); return true; }
+	}
 
 	return false;
 	
+}
+
+void Puzzle::Dijkstra(Node* node) {
+	std::list<Node*> openList;
+	std::list<Node*> closedList;
+	openList.push_back(node);
+	Node* currentNode;
+	int blankSpace;
+
+	bool goal = false;
+	while (!goal && !openList.empty()) {
+		currentNode = openList.front();
+	
+		openList.pop_front();
+		closedList.push_back(currentNode);
+
+		blankSpace = findBlank(currentNode);
+		move_up(currentNode, blankSpace);
+		if (blankSpace != 0 && blankSpace != 1 && blankSpace != 2)
+			currentNode->childern.back()->cost = currentNode->cost + currentNode->data.at(blankSpace - 3);
+
+		move_down(currentNode, blankSpace);
+		if (blankSpace != 6 && blankSpace != 7 && blankSpace != 8)
+			currentNode->childern.back()->cost = currentNode->cost + currentNode->data.at(blankSpace + 3);
+
+		move_left(currentNode, blankSpace);
+		if (blankSpace != 0 && blankSpace != 3 && blankSpace != 6)
+			currentNode->childern.back()->cost = currentNode->cost + currentNode->data.at(blankSpace - 1);
+
+		move_right(currentNode, blankSpace);
+		if (blankSpace != 2 && blankSpace != 5 && blankSpace != 8)
+			currentNode->childern.back()->cost = currentNode->cost + currentNode->data.at(blankSpace + 1);
+
+		for (auto child : currentNode->childern) {
+			if (child->data == goalState) {
+				goal = true;
+				path(child);
+				std::cout << child->cost << std::endl;
+				break;
+			}
+			if (child->data == currentNode->data) { continue; }
+
+			if (!stateInList(child, openList) && !stateInList(child, openList)) {
+					openList.push_back(child);
+			}
+
+		}
+
+	}
 }
 
 //Creates all possible children given parent node
