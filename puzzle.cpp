@@ -8,10 +8,10 @@ Puzzle::~Puzzle(){
 
 }
 
-void Puzzle::BFS(Node* node) {
+void Puzzle::BFS(Node node) {
 	std::list<Node*> openList;
 	std::list<Node*> closedList;
-	openList.push_back(node);
+	openList.push_back(&node);
 	Node* currentNode;
 		
 	bool goal = false;
@@ -76,21 +76,23 @@ bool Puzzle::DFS(Node* node) {
 	
 }
 
-void Puzzle::Dijkstra(Node* node) {
-	std::list<Node*> openList;
-	std::list<Node*> closedList;
-	openList.push_back(node);
+void Puzzle::Dijkstra(Node node) {
+	std::vector<Node*> openVector; //Stores the nodes that need to traversed still
+	std::vector<Node*> closedVector; //Stores the node already traversed
+	openVector.push_back(&node); //Pushing root node onto vector
 	Node* currentNode;
-	int blankSpace;
+	int blankSpace; //blank space represents index at which the zero is located for swapping
 
 	bool goal = false;
-	while (!goal && !openList.empty()) {
-		currentNode = openList.front();
-	
-		openList.pop_front();
-		closedList.push_back(currentNode);
+	while (!goal && !openVector.empty()) {
+
+		currentNode = openVector.back();
+		openVector.pop_back();
+		closedVector.push_back(currentNode);
 
 		blankSpace = findBlank(currentNode);
+
+		//Moves have to be added one at a time inorder to properly implement the cost for each node
 		move_up(currentNode, blankSpace);
 		if (blankSpace != 0 && blankSpace != 1 && blankSpace != 2)
 			currentNode->childern.back()->cost = currentNode->cost + currentNode->data.at(blankSpace - 3);
@@ -106,21 +108,26 @@ void Puzzle::Dijkstra(Node* node) {
 		move_right(currentNode, blankSpace);
 		if (blankSpace != 2 && blankSpace != 5 && blankSpace != 8)
 			currentNode->childern.back()->cost = currentNode->cost + currentNode->data.at(blankSpace + 1);
+		//End of move creation
 
+		//Iterate through childern just created for node to find goal state or add to the vector
 		for (auto child : currentNode->childern) {
 			if (child->data == goalState) {
 				goal = true;
 				path(child);
-				std::cout << child->cost << std::endl;
+				std::cout << "Cost using Dijkstra: " << child->cost << std::endl;
 				break;
 			}
 			if (child->data == currentNode->data) { continue; }
 
-			if (!stateInList(child, openList) && !stateInList(child, openList)) {
-					openList.push_back(child);
+			if (!stateInVector(child, openVector) && !stateInVector(child, closedVector)) {
+					openVector.push_back(child);
 			}
 
 		}
+
+		//Sorting vector in descending order based on cost
+		std::sort(openVector.begin(), openVector.end(), [](Node* a, Node* b) { return a->cost > b->cost; });
 
 	}
 }
@@ -130,8 +137,8 @@ void Puzzle::expandNode(Node* node) {
 	int blankSpacePos;
 	blankSpacePos = findBlank(node);
 
-	move_left(node, blankSpacePos);
 	move_up(node, blankSpacePos);
+	move_left(node, blankSpacePos);
 	move_down(node, blankSpacePos);
 	move_right(node, blankSpacePos);
 }
@@ -174,6 +181,7 @@ void Puzzle::move_left(Node* node, int bSpace) {
 
 //Prints the current puzzle within a node
 void Puzzle::printState (Node* node) {
+	std::vector<int>::iterator it;
 	int printCount = 0;
 	for (it = node->data.begin(); it != node->data.end(); it++) {
 		if (printCount == 3) {
@@ -188,6 +196,7 @@ void Puzzle::printState (Node* node) {
 
 //Finds the "blank" position so it can be swapped
 int Puzzle::findBlank(Node* node) {
+	std::vector<int>::iterator it;
 	int distance;
 	it = std::find(node->data.begin(), node->data.end(), 0);
 	distance = std::distance(node->data.begin(), it);
@@ -200,6 +209,15 @@ bool Puzzle::stateInList(Node* node, std::list<Node*> list) {
 		if (node->data == i->data) { inList = true; }
 	
 	return inList;
+
+}
+
+bool Puzzle::stateInVector(Node* node, std::vector<Node*> vector) {
+	bool inVector = false;
+	for (auto i : vector)
+		if (node->data == i->data) { inVector = true; }
+
+	return inVector;
 
 }
 

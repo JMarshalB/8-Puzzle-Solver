@@ -21,9 +21,9 @@ public:
 
 
     //Different Algos
-    void BFS(Node* node);
+    void BFS(Node node);
     bool DFS(Node* node);
-    void Dijkstra(Node* node);
+    void Dijkstra(Node node);
 
     //Public Utility
     void printState (Node* node);
@@ -40,11 +40,11 @@ protected:
     int findBlank(Node* node);
     void expandNode(Node* node);
     bool stateInList(Node* node, std::list<Node*> list);
+    bool stateInVector(Node* node, std::vector<Node*> vector);
     void path(Node* node);
 
 
 private:
-    std::vector<int>::iterator it;
     std::list<Node*> visitedDFSList;
 
     std::vector<int> goalState = {
