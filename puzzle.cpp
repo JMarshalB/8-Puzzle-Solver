@@ -23,7 +23,6 @@ void Puzzle::BFS(Node node) {
 		closedList.push_back(currentNode); //Finally add to closed list
 
 		//Create all moves possible with that node
-		//printState(node);
 		expandNode(currentNode);
 
 		//Iterate through childern to check if it equals the goal state
@@ -79,16 +78,29 @@ bool Puzzle::DFS(Node* node) {
 void Puzzle::Dijkstra(Node node) {
 	std::vector<Node*> openVector; //Stores the nodes that need to traversed still
 	std::vector<Node*> closedVector; //Stores the node already traversed
+	std::vector<Node*>::iterator removeIndex;
+	std::vector<Node*>::iterator it;
 	openVector.push_back(&node); //Pushing root node onto vector
 	Node* currentNode;
 	int blankSpace; //blank space represents index at which the zero is located for swapping
+	
 
 	bool goal = false;
+
 	while (!goal && !openVector.empty()) {
 
-		currentNode = openVector.back();
-		openVector.pop_back();
+		currentNode = openVector.front(); //First node in vector
+		removeIndex = openVector.begin(); //Keeps track of what index we are delete
+
+		for (it = openVector.begin(); it != openVector.end(); it++) {
+			if ((*it)->cost < currentNode->cost) {
+				currentNode = (*it);
+				removeIndex = it;
+			}
+		}
+		openVector.erase(removeIndex);
 		closedVector.push_back(currentNode);
+
 
 		blankSpace = findBlank(currentNode);
 
@@ -118,16 +130,14 @@ void Puzzle::Dijkstra(Node node) {
 				std::cout << "Cost using Dijkstra: " << child->cost << std::endl;
 				break;
 			}
-			if (child->data == currentNode->data) { continue; }
+			if(currentNode->parent != nullptr)
+				if (child->data == currentNode->parent->data) { continue; }
 
 			if (!stateInVector(child, openVector) && !stateInVector(child, closedVector)) {
 					openVector.push_back(child);
 			}
 
 		}
-
-		//Sorting vector in descending order based on cost
-		std::sort(openVector.begin(), openVector.end(), [](Node* a, Node* b) { return a->cost > b->cost; });
 
 	}
 }

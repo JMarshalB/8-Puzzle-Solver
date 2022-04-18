@@ -23,8 +23,8 @@ int main() {
     std::cout << "--------------\nGoal Puzzle\n--------------\n";
     obj.printState(&goal);
 	
-    obj.BFS(root);
     obj.Dijkstra(root);
+    obj.BFS(root);
     obj.DFS(&root);
 
 	return 0;
