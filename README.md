@@ -42,6 +42,7 @@ below:
 
 ---------------------------------------------------------------------------------------------------------------
 **To run this program**
+
 In your command line enter the following: g++ Main.cpp puzzle.cpp puzzle.hpp
 
 If you wish to edit the goal state or initial state edit their respective vectors in Main.cpp
