@@ -51,19 +51,19 @@ If you wish to edit the goal state or initial state edit their respective vector
 
 # Sample Input
 
-Sample file 1:
+Sample input 1:
 
-1 3 4
-8 0 2
-7 6 5
+1   3   4                               
+8   0   2                               
+7   6   5
 
 Solutions: The shortest path cost = 11
 
-Sample file 2:
+Sample input 2:
 
-1 3 4
-8 0 6
-7 5 2
+1   3   4                               
+8   0   6                               
+7   5   2
 
 Solution: The shortest path cost = 30
 
